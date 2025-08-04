@@ -1,0 +1,32 @@
+server:
+  port: 8080
+  error:
+    whitelabel:
+      enabled: false
+
+spring:
+  application:
+    name: api-gateway
+
+  cloud:
+    gateway:
+      server:
+        webmvc:
+          routes:
+            - id: ai-service
+              uri: http://localhost:8081
+              predicates:
+                - Path=/ai/**
+              filters:
+                - RewritePath=/ai/(?<path>.*), /$\{path}
+
+eureka:
+  client:
+    register-with-eureka: false
+    fetch-registry: false
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+
+logging:
+  level:
+    org.springframework.cloud.gateway.server.webmvc: DEBUG
